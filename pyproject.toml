@@ -13,3 +13,8 @@ dependencies = []
 
 [project.scripts]
 prymate = "prymate.console:main"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.13.3",
+]
