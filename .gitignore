@@ -1,5 +1,10 @@
-.vscode
-__pycache__
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
 
-prymate.egg-info
-dist
+# Virtual environments
+.venv
