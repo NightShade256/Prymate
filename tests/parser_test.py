@@ -19,7 +19,7 @@ from prymate.ast import (
     DictionaryLiteral,
     FloatLiteral,
 )
-from prymate.lexer import Lexer
+from prymate.scanner import Scanner
 from prymate.parser import Parser
 
 
@@ -32,7 +32,7 @@ class TestParser(unittest.TestCase):
         ]
 
         for tt in tests:
-            lexer = Lexer(tt[0])
+            lexer = Scanner(tt[0])
             parser = Parser(lexer)
 
             program = parser.parse_program()
@@ -56,7 +56,7 @@ class TestParser(unittest.TestCase):
             ["return foobar;", "foobar"],
         ]
         for tt in tests:
-            lexer = Lexer(tt[0])
+            lexer = Scanner(tt[0])
             parser = Parser(lexer)
 
             program = parser.parse_program()
@@ -82,7 +82,7 @@ class TestParser(unittest.TestCase):
 
     def test_identifier(self):
         inputcase = "foobar;"
-        lexer = Lexer(inputcase)
+        lexer = Scanner(inputcase)
         parser = Parser(lexer)
         program = parser.parse_program()
 
@@ -112,7 +112,7 @@ class TestParser(unittest.TestCase):
 
     def test_integer_literal_statement(self):
         inputcase = "5;"
-        lexer = Lexer(inputcase)
+        lexer = Scanner(inputcase)
         parser = Parser(lexer)
         program = parser.parse_program()
 
@@ -147,7 +147,7 @@ class TestParser(unittest.TestCase):
         ]
 
         for tt in prefix_tests:
-            lexer = Lexer(tt[0])
+            lexer = Scanner(tt[0])
             parser = Parser(lexer)
 
             program = parser.parse_program()
@@ -194,7 +194,7 @@ class TestParser(unittest.TestCase):
         ]
 
         for tt in infix_tests:
-            lexer = Lexer(tt[0])
+            lexer = Scanner(tt[0])
             parser = Parser(lexer)
 
             program = parser.parse_program()
@@ -258,7 +258,7 @@ class TestParser(unittest.TestCase):
         ]
 
         for tt in tests:
-            lexer = Lexer(tt[0])
+            lexer = Scanner(tt[0])
             parser = Parser(lexer)
             program = parser.parse_program()
             self._check_parser_errors(parser)
@@ -270,7 +270,7 @@ class TestParser(unittest.TestCase):
     def test_if_expression(self):
         input_case = "if (x < y) { x }"
 
-        lexer = Lexer(input_case)
+        lexer = Scanner(input_case)
         parser = Parser(lexer)
 
         program = parser.parse_program()
@@ -312,7 +312,7 @@ class TestParser(unittest.TestCase):
     def test_if_else_exp(self):
         input_case = "if (x < y) { x } else { y }"
 
-        lexer = Lexer(input_case)
+        lexer = Scanner(input_case)
         parser = Parser(lexer)
 
         program = parser.parse_program()
@@ -363,7 +363,7 @@ class TestParser(unittest.TestCase):
     def test_function_literal_parsing(self):
         input_case = "fn(x, y) { x + y; }"
 
-        lexer = Lexer(input_case)
+        lexer = Scanner(input_case)
         parser = Parser(lexer)
 
         program = parser.parse_program()
@@ -411,7 +411,7 @@ class TestParser(unittest.TestCase):
         ]
 
         for tt in tests:
-            lexer = Lexer(tt[0])
+            lexer = Scanner(tt[0])
             parser = Parser(lexer)
 
             program = parser.parse_program()
@@ -431,7 +431,7 @@ class TestParser(unittest.TestCase):
 
     def test_callexp_parsing(self):
         input_case = "add(1, 2 * 3, 4 + 5)"
-        lexer = Lexer(input_case)
+        lexer = Scanner(input_case)
         parser = Parser(lexer)
 
         program = parser.parse_program()
@@ -463,7 +463,7 @@ class TestParser(unittest.TestCase):
 
     def test_string_literal_exp(self):
         input_case = '"hello world";'
-        lexer = Lexer(input_case)
+        lexer = Scanner(input_case)
         parser = Parser(lexer)
 
         program = parser.parse_program()
@@ -483,7 +483,7 @@ class TestParser(unittest.TestCase):
 
     def test_parsing_array_literals(self):
         input_case = "[1, 2 * 2, 3 + 3]"
-        lexer = Lexer(input_case)
+        lexer = Scanner(input_case)
         parser = Parser(lexer)
 
         program = parser.parse_program()
@@ -506,7 +506,7 @@ class TestParser(unittest.TestCase):
 
     def test_parsing_index_exp(self):
         input_case = "myArray[1 + 1]"
-        lexer = Lexer(input_case)
+        lexer = Scanner(input_case)
         parser = Parser(lexer)
 
         program = parser.parse_program()
@@ -525,7 +525,7 @@ class TestParser(unittest.TestCase):
 
     def test_parsing_dict(self):
         input_case = '{"one": 1, "two": 2, "three": 3}'
-        lexer = Lexer(input_case)
+        lexer = Scanner(input_case)
         parser = Parser(lexer)
 
         program = parser.parse_program()
@@ -550,7 +550,7 @@ class TestParser(unittest.TestCase):
 
     def test_parsing_dict_withexp(self):
         input_case = '{"one": 0 + 1, "two": 10 - 8, "three": 15 / 5}'
-        lexer = Lexer(input_case)
+        lexer = Scanner(input_case)
         parser = Parser(lexer)
 
         program = parser.parse_program()
@@ -582,7 +582,7 @@ class TestParser(unittest.TestCase):
 
     def test_parsing_emptydict(self):
         input_case = "{}"
-        lexer = Lexer(input_case)
+        lexer = Scanner(input_case)
         parser = Parser(lexer)
 
         program = parser.parse_program()

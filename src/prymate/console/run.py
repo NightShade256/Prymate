@@ -35,7 +35,7 @@ def main() -> None:
         except FileNotFoundError:
             return print(f"File {args.file} does not exist.")
         else:
-            lexer = prymate.lexer.Lexer(str(code))
+            lexer = prymate.scanner.Scanner(str(code))
             parser = prymate.parser.Parser(lexer)
 
             program = parser.parse_program()

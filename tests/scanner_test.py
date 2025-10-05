@@ -1,6 +1,6 @@
 import unittest
 
-from prymate.lexer import Lexer
+from prymate.scanner import Scanner
 from prymate.token import TokenType
 
 TEST_INPUT = """
@@ -128,10 +128,10 @@ class TestLexer(unittest.TestCase):
             [TokenType.EOF, ""],
         ]
 
-        test_lexer = Lexer(TEST_INPUT)
+        test_lexer = Scanner(TEST_INPUT)
 
         for tt in expected_output:
-            tok = test_lexer.next_token()
+            tok = test_lexer.scan_token()
 
             self.assertEqual(tok.ttype, tt[0], f"Should be {tt[0]}")
             self.assertEqual(tok.lexeme, tt[1], f"Should be {tt[1]}")

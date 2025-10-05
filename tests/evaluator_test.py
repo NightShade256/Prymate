@@ -1,7 +1,7 @@
 import unittest
 
 from prymate import evaluator, objects
-from prymate.lexer import Lexer
+from prymate.scanner import Scanner
 from prymate.parser import Parser
 
 
@@ -366,7 +366,7 @@ class TestEvaluator(unittest.TestCase):
             self.fail(f"Object is not NULL. Got {obj}.")
 
     def _test_eval(self, input_case: str):
-        lexer = Lexer(input_case)
+        lexer = Scanner(input_case)
         parser = Parser(lexer)
         env = objects.Environment()
 

@@ -2,7 +2,7 @@ import platform
 
 import prymate
 from prymate.evaluator import evaluate
-from prymate.lexer import Lexer
+from prymate.scanner import Scanner
 from prymate.objects import Environment
 from prymate.parser import Parser
 
@@ -23,7 +23,7 @@ def start() -> None:
         if not line:
             continue
 
-        parser = Parser(Lexer(line))
+        parser = Parser(Scanner(line))
         program = parser.parse_program()
 
         if parser.errors:
