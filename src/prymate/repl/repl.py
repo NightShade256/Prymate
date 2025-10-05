@@ -26,9 +26,9 @@ def start() -> None:
         parser = Parser(Scanner(line))
         program = parser.parse_program()
 
-        if parser.errors:
+        if parser.parser_errors:
             print("There was a error while parsing the program.\nErrors:")
-            for x in parser.errors:
+            for x in parser.parser_errors:
                 print(f"\t{x}\n")
             continue
 

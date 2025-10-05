@@ -39,10 +39,10 @@ def main() -> None:
             parser = prymate.parser.Parser(lexer)
 
             program = parser.parse_program()
-            if parser.errors:
+            if parser.parser_errors:
                 print("Prymate encountered errors while parsing the program.")
                 print("Errors:\n")
-                for error in parser.errors:
+                for error in parser.parser_errors:
                     print(error)
 
                 return

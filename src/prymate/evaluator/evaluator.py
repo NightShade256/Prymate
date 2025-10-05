@@ -63,7 +63,7 @@ def evaluate(
         if is_error(val) or val is None:
             return val
 
-        env.set_var(node.name.value, val)
+        env.set_var(node.lvalue.value, val)
     elif isinstance(node, ast.ReassignStatement):
         exp = node.value
         if not isinstance(exp, ast.Expression):
