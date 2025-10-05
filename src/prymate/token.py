@@ -1,12 +1,14 @@
+import dataclasses
 import enum
 
-__all__ = ["TokenType", "Token", "lookup_ident"]
+__all__ = ["get_identifier_type", "TokenType", "Token"]
 
 
 class TokenType(enum.Enum):
-    """The enumeration for different types of tokens."""
+    """Enumeration of all token types used by the lexer."""
 
-    ILLEGAL = "ILLEGAL"
+    # Special tokens
+    ERROR = "ERROR"
     EOF = "EOF"
 
     # Identifiers and literals
@@ -21,11 +23,9 @@ class TokenType(enum.Enum):
     BANG = "!"
     ASTERISK = "*"
     SLASH = "/"
-    MODULO = "%"  # Additional
-
+    MODULO = "%"  # ext
     LT = "<"
     GT = ">"
-
     EQ = "=="
     NOT_EQ = "!="
 
@@ -33,8 +33,7 @@ class TokenType(enum.Enum):
     COMMA = ","
     SEMICOLON = ";"
     COLON = ":"
-    DOT = "."  # Additional
-
+    DOT = "."  # ext
     LPAREN = "("
     RPAREN = ")"
     LBRACE = "{"
@@ -50,25 +49,20 @@ class TokenType(enum.Enum):
     IF = "IF"
     ELSE = "ELSE"
     RETURN = "RETURN"
-    CONST = "CONST"
-    WHILE = "WHILE"
+    CONST = "CONST"  # ext
+    WHILE = "WHILE"  # ext
 
 
+@dataclasses.dataclass
 class Token:
-    """Represents a token."""
+    """Represents a lexical token with its type, and literal (if any)."""
 
-    def __init__(self, tp: TokenType, literal: str) -> None:
-        self.tp = tp
-        self.literal = literal
-
-    def __repr__(self) -> str:
-        return f"<Token type: {self.tp} literal: {self.literal}>"
-
-    def __str__(self) -> str:
-        return f"<Token type: {self.tp} literal: {self.literal}>"
+    ttype: TokenType
+    lexeme: str
 
 
-KEYWORDS = {
+# Reserved identifiers (keywords) list for the Monkey language.
+MONKEY_KEYWORDS = {
     "fn": TokenType.FUNCTION,
     "let": TokenType.LET,
     "true": TokenType.TRUE,
@@ -76,11 +70,12 @@ KEYWORDS = {
     "if": TokenType.IF,
     "else": TokenType.ELSE,
     "return": TokenType.RETURN,
-    "const": TokenType.CONST,
-    "while": TokenType.WHILE,
+    "const": TokenType.CONST,  # ext
+    "while": TokenType.WHILE,  # ext
 }
 
 
-def lookup_ident(ident: str) -> TokenType:
-    """Fetch correct token type for an identifier."""
-    return KEYWORDS.get(ident, TokenType.IDENT)
+def get_identifier_type(ident: str) -> TokenType:
+    """Return the keyword token type if the identifier is reserved, otherwise TokenType.IDENT."""
+
+    return MONKEY_KEYWORDS.get(ident, TokenType.IDENT)

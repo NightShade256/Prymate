@@ -84,7 +84,7 @@ class Identifier(Expression):
         pass
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class LetStatement(Statement):
@@ -103,7 +103,7 @@ class LetStatement(Statement):
         pass
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class ReturnStatement(Statement):
@@ -121,7 +121,7 @@ class ReturnStatement(Statement):
         pass
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class ReassignStatement(Statement):
@@ -140,7 +140,7 @@ class ReassignStatement(Statement):
         pass
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class ConstStatement(Statement):
@@ -159,7 +159,7 @@ class ConstStatement(Statement):
         pass
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class WhileStatement(Statement):
@@ -173,7 +173,7 @@ class WhileStatement(Statement):
         return fmt
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
     def statement_node(self) -> None:
         pass
@@ -192,7 +192,7 @@ class ExpressionStatement(Statement):
         pass
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class IntegerLiteral(Expression):
@@ -201,10 +201,10 @@ class IntegerLiteral(Expression):
         self.value: int
 
     def __str__(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class PrefixExpression(Expression):
@@ -217,7 +217,7 @@ class PrefixExpression(Expression):
         return f"({self.operator}{str(self.right)})"
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class InfixExpression(Expression):
@@ -231,7 +231,7 @@ class InfixExpression(Expression):
         return f"({str(self.left)} {self.operator} {str(self.right)})"
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class BooleanLiteral(Expression):
@@ -240,10 +240,10 @@ class BooleanLiteral(Expression):
         self.value = value
 
     def __str__(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class IfExpression(Expression):
@@ -261,7 +261,7 @@ class IfExpression(Expression):
         return fmt
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class BlockStatement(Statement):
@@ -277,7 +277,7 @@ class BlockStatement(Statement):
         return fmt
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class FunctionLiteral(Expression):
@@ -294,7 +294,7 @@ class FunctionLiteral(Expression):
         return fmt
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class CallExpression(Expression):
@@ -317,7 +317,7 @@ class CallExpression(Expression):
         return fmt
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class StringLiteral(Expression):
@@ -326,10 +326,10 @@ class StringLiteral(Expression):
         self.value = value
 
     def __str__(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class ArrayLiteral(Expression):
@@ -345,7 +345,7 @@ class ArrayLiteral(Expression):
         return f"[{', '.join(elements)}]"
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class IndexExpression(Expression):
@@ -358,7 +358,7 @@ class IndexExpression(Expression):
         return f"({str(self.left)}[{str(self.index)}])"
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class DictionaryLiteral(Expression):
@@ -376,7 +376,7 @@ class DictionaryLiteral(Expression):
         return fmt
 
     def token_literal(self) -> str:
-        return self.token.literal
+        return self.token.lexeme
 
 
 class FloatLiteral(Expression):

@@ -133,8 +133,8 @@ class TestLexer(unittest.TestCase):
         for tt in expected_output:
             tok = test_lexer.next_token()
 
-            self.assertEqual(tok.tp, tt[0], f"Should be {tt[0]}")
-            self.assertEqual(tok.literal, tt[1], f"Should be {tt[1]}")
+            self.assertEqual(tok.ttype, tt[0], f"Should be {tt[0]}")
+            self.assertEqual(tok.lexeme, tt[1], f"Should be {tt[1]}")
 
 
 if __name__ == "__main__":

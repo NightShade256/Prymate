@@ -1,6 +1,6 @@
 import typing
 
-from prymate.token import Token, TokenType, lookup_ident
+from prymate.token import Token, TokenType, get_identifier_type
 
 __all__ = ["Lexer"]
 
@@ -88,7 +88,7 @@ class Lexer:
         else:
             if self.ch.isalpha() or self.ch == "_":
                 ident = self.read_identifier()
-                tok = Token(lookup_ident(ident), ident)
+                tok = Token(get_identifier_type(ident), ident)
                 return tok
             elif self.ch.isdigit():
                 tok = Token(TokenType.INT, self.read_number())

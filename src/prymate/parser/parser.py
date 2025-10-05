@@ -90,7 +90,7 @@ class Parser:
         """Parse the given input into AST."""
         program = ast.Program()
 
-        while self.current_token.tp != TokenType.EOF:
+        while self.current_token.ttype != TokenType.EOF:
             stmt = self.parse_statement()
             if stmt is not None:
                 program.statements.append(stmt)
@@ -99,17 +99,17 @@ class Parser:
         return program
 
     def parse_statement(self) -> typing.Optional[ast.Statement]:
-        if self.current_token.tp == TokenType.LET:
+        if self.current_token.ttype == TokenType.LET:
             return self.parse_let_statement()
-        elif self.current_token.tp == TokenType.RETURN:
+        elif self.current_token.ttype == TokenType.RETURN:
             return self.parse_return_statement()
-        elif self.current_token.tp == TokenType.CONST:
+        elif self.current_token.ttype == TokenType.CONST:
             return self.parse_const_statement()
-        elif self.current_token.tp == TokenType.WHILE:
+        elif self.current_token.ttype == TokenType.WHILE:
             return self.parse_while_statement()
         elif (
-            self.current_token.tp == TokenType.IDENT
-            and self.peek_token.tp == TokenType.ASSIGN
+            self.current_token.ttype == TokenType.IDENT
+            and self.peek_token.ttype == TokenType.ASSIGN
         ):
             return self.parse_reassign_statement()
         else:
@@ -121,7 +121,7 @@ class Parser:
         if not self.expect_peek(TokenType.IDENT):
             return None
 
-        stmt.name = ast.Identifier(self.current_token, self.current_token.literal)
+        stmt.name = ast.Identifier(self.current_token, self.current_token.lexeme)
 
         if not self.expect_peek(TokenType.ASSIGN):
             return None
@@ -134,7 +134,7 @@ class Parser:
 
         stmt.value = val
 
-        if self.peek_token.tp == TokenType.SEMICOLON:
+        if self.peek_token.ttype == TokenType.SEMICOLON:
             self.next_token()
 
         return stmt
@@ -145,7 +145,7 @@ class Parser:
         if not self.expect_peek(TokenType.IDENT):
             return None
 
-        stmt.name = ast.Identifier(self.current_token, self.current_token.literal)
+        stmt.name = ast.Identifier(self.current_token, self.current_token.lexeme)
 
         if not self.expect_peek(TokenType.ASSIGN):
             return None
@@ -158,14 +158,14 @@ class Parser:
 
         stmt.value = val
 
-        if self.peek_token.tp == TokenType.SEMICOLON:
+        if self.peek_token.ttype == TokenType.SEMICOLON:
             self.next_token()
 
         return stmt
 
     def parse_reassign_statement(self) -> typing.Optional[ast.ReassignStatement]:
         stmt = ast.ReassignStatement(Token(TokenType.ASSIGN, "="))
-        stmt.name = ast.Identifier(self.current_token, self.current_token.literal)
+        stmt.name = ast.Identifier(self.current_token, self.current_token.lexeme)
 
         if not self.expect_peek(TokenType.ASSIGN):
             return None
@@ -177,7 +177,7 @@ class Parser:
 
         stmt.value = val
 
-        if self.peek_token.tp == TokenType.SEMICOLON:
+        if self.peek_token.ttype == TokenType.SEMICOLON:
             self.next_token()
 
         return stmt
@@ -214,7 +214,7 @@ class Parser:
             return None
         stmt.return_value = ret
 
-        if self.peek_token.tp == TokenType.SEMICOLON:
+        if self.peek_token.ttype == TokenType.SEMICOLON:
             self.next_token()
 
         return stmt
@@ -227,7 +227,7 @@ class Parser:
             return None
 
         stmt.expression = exp
-        if self.peek_token.tp == TokenType.SEMICOLON:
+        if self.peek_token.ttype == TokenType.SEMICOLON:
             self.next_token()
 
         return stmt
@@ -236,18 +236,18 @@ class Parser:
         self, precedence: Precedences
     ) -> typing.Optional[ast.Expression]:
 
-        prefix = self.prefix_parse_fns.get(self.current_token.tp, None)
+        prefix = self.prefix_parse_fns.get(self.current_token.ttype, None)
         if prefix is None:
-            self.prefix_parse_error(self.current_token.tp)
+            self.prefix_parse_error(self.current_token.ttype)
             return None
 
         left_exp = prefix()
 
         while (
-            self.peek_token.tp != TokenType.SEMICOLON
+            self.peek_token.ttype != TokenType.SEMICOLON
             and precedence.value < self.peek_precedence().value
         ):
-            infix = self.infix_parse_fns.get(self.peek_token.tp, None)
+            infix = self.infix_parse_fns.get(self.peek_token.ttype, None)
             if infix is None:
                 return left_exp
 
@@ -261,33 +261,33 @@ class Parser:
         return left_exp
 
     def parse_identifier(self) -> ast.Identifier:
-        return ast.Identifier(self.current_token, self.current_token.literal)
+        return ast.Identifier(self.current_token, self.current_token.lexeme)
 
     def parse_numeric_literal(
         self,
     ) -> typing.Union[ast.IntegerLiteral, ast.FloatLiteral, None]:
         try:
-            value = int(self.current_token.literal)
+            value = int(self.current_token.lexeme)
         except ValueError:
-            msg = f"Could not parse {self.current_token.literal} as integer."
+            msg = f"Could not parse {self.current_token.lexeme} as integer."
             self.errors.append(msg)
             return None
 
         lit: typing.Union[ast.IntegerLiteral, ast.FloatLiteral]
 
-        if not self.peek_token.tp == TokenType.DOT:
+        if not self.peek_token.ttype == TokenType.DOT:
             lit = ast.IntegerLiteral(self.current_token)
             lit.value = value
         else:
             lit = ast.FloatLiteral(self.peek_token)
             self.next_token()
             self.next_token()
-            rep = f"{value}.{self.current_token.literal}"
+            rep = f"{value}.{self.current_token.lexeme}"
 
             try:
                 val = float(rep)
             except ValueError:
-                msg = f"Could not parse {self.current_token.literal} as float."
+                msg = f"Could not parse {self.current_token.lexeme} as float."
                 self.errors.append(msg)
                 return None
 
@@ -297,11 +297,11 @@ class Parser:
 
     def parse_boolean_literal(self) -> ast.BooleanLiteral:
         return ast.BooleanLiteral(
-            self.current_token, TokenType.TRUE == self.current_token.tp
+            self.current_token, TokenType.TRUE == self.current_token.ttype
         )
 
     def parse_prefix_expression(self) -> typing.Optional[ast.PrefixExpression]:
-        exp = ast.PrefixExpression(self.current_token, self.current_token.literal)
+        exp = ast.PrefixExpression(self.current_token, self.current_token.lexeme)
         self.next_token()
 
         right = self.parse_expression(Precedences.PREFIX)
@@ -315,7 +315,7 @@ class Parser:
     def parse_infix_expression(
         self, left: ast.Expression
     ) -> typing.Optional[ast.InfixExpression]:
-        exp = ast.InfixExpression(self.current_token, self.current_token.literal, left)
+        exp = ast.InfixExpression(self.current_token, self.current_token.lexeme, left)
 
         precedence = self.current_precedence()
         self.next_token()
@@ -358,7 +358,7 @@ class Parser:
 
         exp.consequence = self.parse_block_statement()
 
-        if self.peek_token.tp == TokenType.ELSE:
+        if self.peek_token.ttype == TokenType.ELSE:
             self.next_token()
 
             if not self.expect_peek(TokenType.LBRACE):
@@ -373,8 +373,8 @@ class Parser:
         self.next_token()
 
         while (
-            not self.current_token.tp == TokenType.RBRACE
-            and not self.current_token.tp == TokenType.EOF
+            not self.current_token.ttype == TokenType.RBRACE
+            and not self.current_token.ttype == TokenType.EOF
         ):
             stmt = self.parse_statement()
             if stmt is not None:
@@ -405,19 +405,19 @@ class Parser:
     def parse_function_parameters(self) -> typing.Optional[typing.List[ast.Identifier]]:
         idents: typing.List[ast.Identifier] = []
 
-        if self.peek_token.tp == TokenType.RPAREN:
+        if self.peek_token.ttype == TokenType.RPAREN:
             self.next_token()
             return idents
 
         self.next_token()
-        ident = ast.Identifier(self.current_token, self.current_token.literal)
+        ident = ast.Identifier(self.current_token, self.current_token.lexeme)
         idents.append(ident)
 
-        while self.peek_token.tp == TokenType.COMMA:
+        while self.peek_token.ttype == TokenType.COMMA:
             self.next_token()
             self.next_token()
 
-            ident = ast.Identifier(self.current_token, self.current_token.literal)
+            ident = ast.Identifier(self.current_token, self.current_token.lexeme)
             idents.append(ident)
 
         if not self.expect_peek(TokenType.RPAREN):
@@ -450,7 +450,7 @@ class Parser:
     ) -> typing.Optional[typing.List[Expression]]:
         args: typing.List[Expression] = []
 
-        if self.peek_token.tp == end:
+        if self.peek_token.ttype == end:
             self.next_token()
             return args
 
@@ -461,7 +461,7 @@ class Parser:
 
         args.append(exp)
 
-        while self.peek_token.tp == TokenType.COMMA:
+        while self.peek_token.ttype == TokenType.COMMA:
             self.next_token()
             self.next_token()
 
@@ -477,7 +477,7 @@ class Parser:
         return args
 
     def parse_string_literal(self) -> ast.StringLiteral:
-        return ast.StringLiteral(self.current_token, self.current_token.literal)
+        return ast.StringLiteral(self.current_token, self.current_token.lexeme)
 
     def parse_index_exp(
         self, left: ast.Expression
@@ -499,7 +499,7 @@ class Parser:
     def parse_dict_literal(self) -> typing.Optional[ast.DictionaryLiteral]:
         dictionary = ast.DictionaryLiteral(self.current_token)
 
-        while self.peek_token.tp != TokenType.RBRACE:
+        while self.peek_token.ttype != TokenType.RBRACE:
             self.next_token()
             key = self.parse_expression(Precedences.LOWEST)
 
@@ -514,7 +514,7 @@ class Parser:
 
             dictionary.pairs[key] = value
 
-            if self.peek_token.tp != TokenType.RBRACE and not self.expect_peek(
+            if self.peek_token.ttype != TokenType.RBRACE and not self.expect_peek(
                 TokenType.COMMA
             ):
                 return None
@@ -525,7 +525,7 @@ class Parser:
         return dictionary
 
     def expect_peek(self, tp: TokenType) -> bool:
-        if self.peek_token.tp == tp:
+        if self.peek_token.ttype == tp:
             self.next_token()
             return True
 
@@ -533,7 +533,7 @@ class Parser:
         return False
 
     def peek_error(self, tp: TokenType) -> None:
-        msg = f"Expected next token to be {tp}, instead got {self.peek_token.tp}."
+        msg = f"Expected next token to be {tp}, instead got {self.peek_token.ttype}."
         self.errors.append(msg)
 
     def prefix_parse_error(self, tp: TokenType) -> None:
@@ -553,7 +553,7 @@ class Parser:
         self.infix_parse_fns[tp] = fn
 
     def peek_precedence(self) -> Precedences:
-        return OP_PRECEDENCES.get(self.peek_token.tp, Precedences.LOWEST)
+        return OP_PRECEDENCES.get(self.peek_token.ttype, Precedences.LOWEST)
 
     def current_precedence(self) -> Precedences:
-        return OP_PRECEDENCES.get(self.current_token.tp, Precedences.LOWEST)
+        return OP_PRECEDENCES.get(self.current_token.ttype, Precedences.LOWEST)
