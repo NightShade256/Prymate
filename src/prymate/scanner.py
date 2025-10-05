@@ -82,7 +82,7 @@ class Scanner:
             get_identifier_type(self.source[self.start : self.current])
         )
 
-    def scan_token(self) -> Token:
+    def next_token(self) -> Token:
         """Generate next token from the given source."""
 
         self.skip_whitespace()

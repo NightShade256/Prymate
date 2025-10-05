@@ -51,8 +51,8 @@ class Parser:
         ] = {}
 
         # Initial state configuration
-        self.current_token = self.lexer.scan_token()
-        self.peek_token = self.lexer.scan_token()
+        self.current_token = self.lexer.next_token()
+        self.peek_token = self.lexer.next_token()
 
         # Register Prefixes
         self.register_prefix(TokenType.IDENT, self.parse_identifier)
@@ -84,7 +84,7 @@ class Parser:
     def next_token(self) -> None:
         """Update the current and peek tokens, with next tokens in the stream."""
         self.current_token = self.peek_token
-        self.peek_token = self.lexer.scan_token()
+        self.peek_token = self.lexer.next_token()
 
     def parse_program(self) -> ast.Program:
         """Parse the given input into AST."""
