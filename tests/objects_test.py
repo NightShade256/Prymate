@@ -1,14 +1,22 @@
+import pytest
+
 from prymate import objects
 
 
-def test_string_hash():
-    hello1 = objects.String("Hello World")
-    hello2 = objects.String("Hello World")
+@pytest.mark.parametrize(
+    "str1, str2, should_match",
+    [
+        ("Hello World", "Hello World", True),
+        ("My name is johnny", "My name is johnny", True),
+        ("Hello World", "My name is johnny", False),
+        ("Hello World", "My name is johnny", False),
+    ],
+)
+def test_string_hash(str1: str, str2: str, should_match: bool) -> None:
+    obj1 = objects.String(str1)
+    obj2 = objects.String(str2)
 
-    diff1 = objects.String("My name is johnny")
-    diff2 = objects.String("My name is johnny")
-
-    assert hash(hello1) == hash(hello2)
-    assert hash(diff1) == hash(diff2)
-    assert hash(hello1) != hash(diff1)
-    assert hash(hello2) != hash(diff2)
+    if should_match:
+        assert hash(obj1) == hash(obj2)
+    else:
+        assert hash(obj1) != hash(obj2)
