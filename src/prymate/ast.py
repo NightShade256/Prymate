@@ -65,7 +65,7 @@ class BooleanLiteral(Expression):
     value: bool
 
 
-@dataclass
+@dataclass(frozen=True)
 class StringLiteral(Expression):
     value: str
 
