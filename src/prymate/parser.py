@@ -81,28 +81,28 @@ class Parser:
     def expect(self, ttype: TokenType) -> bool:
         """Compare next token's type with given type, if it's a match advance, else log error."""
 
-        if self.next.ttype == ttype:
+        if self.next.type == ttype:
             self.advance()
             return True
 
         self.parser_errors.append(
-            f"Expected next token's type to be {ttype}, instead got type {self.next.ttype}."
+            f"Expected next token's type to be {ttype}, instead got type {self.next.type}."
         )
 
         return False
 
     def current_precedence(self) -> Precedence:
-        return OPERATOR_PRECEDENCE_TABLE.get(self.current.ttype, Precedence.LOWEST)
+        return OPERATOR_PRECEDENCE_TABLE.get(self.current.type, Precedence.LOWEST)
 
     def peek_precedence(self) -> Precedence:
-        return OPERATOR_PRECEDENCE_TABLE.get(self.next.ttype, Precedence.LOWEST)
+        return OPERATOR_PRECEDENCE_TABLE.get(self.next.type, Precedence.LOWEST)
 
     def parse_program(self) -> ast.Program:
         """Parse the given token stream into an AST."""
 
         statements: list[ast.Statement] = []
 
-        while self.current.ttype != TokenType.EOF:
+        while self.current.type != TokenType.EOF:
             statement = self.parse_statement()
 
             if statement is not None:
@@ -113,7 +113,7 @@ class Parser:
         return ast.Program(statements)
 
     def parse_statement(self) -> ast.Statement | None:
-        match self.current.ttype:
+        match self.current.type:
             case TokenType.LET:
                 return self.parse_let_statement()
 
@@ -126,7 +126,7 @@ class Parser:
             case TokenType.WHILE:
                 return self.parse_while_statement()
 
-            case TokenType.IDENT if self.next.ttype == TokenType.ASSIGN:
+            case TokenType.IDENT if self.next.type == TokenType.ASSIGN:
                 return self.parse_reassign_statement()
 
             case _:
@@ -146,7 +146,7 @@ class Parser:
         if (rvalue := self.parse_expression(Precedence.LOWEST)) is None:
             return None
 
-        if self.next.ttype == TokenType.SEMICOLON:
+        if self.next.type == TokenType.SEMICOLON:
             self.advance()
 
         return ast.LetStatement(lvalue, rvalue)
@@ -165,7 +165,7 @@ class Parser:
         if (rvalue := self.parse_expression(Precedence.LOWEST)) is None:
             return None
 
-        if self.next.ttype == TokenType.SEMICOLON:
+        if self.next.type == TokenType.SEMICOLON:
             self.advance()
 
         return ast.ConstStatement(lvalue, rvalue)
@@ -181,7 +181,7 @@ class Parser:
         if (rvalue := self.parse_expression(Precedence.LOWEST)) is None:
             return None
 
-        if self.next.ttype == TokenType.SEMICOLON:
+        if self.next.type == TokenType.SEMICOLON:
             self.advance()
 
         return ast.ReassignStatement(lvalue, rvalue)
@@ -212,7 +212,7 @@ class Parser:
         if (value := self.parse_expression(Precedence.LOWEST)) is None:
             return None
 
-        if self.next.ttype == TokenType.SEMICOLON:
+        if self.next.type == TokenType.SEMICOLON:
             self.advance()
 
         return ast.ReturnStatement(value)
@@ -221,7 +221,7 @@ class Parser:
         if (expression := self.parse_expression(Precedence.LOWEST)) is None:
             return None
 
-        if self.next.ttype == TokenType.SEMICOLON:
+        if self.next.type == TokenType.SEMICOLON:
             self.advance()
 
         return ast.ExpressionStatement(expression)
@@ -241,7 +241,7 @@ class Parser:
 
             return None
 
-        if self.next.ttype == TokenType.DOT:
+        if self.next.type == TokenType.DOT:
             self.advance()  # consume the integer literal
             self.advance()  # consume the dot
 
@@ -257,7 +257,7 @@ class Parser:
             return ast.IntegerLiteral(integer_value)
 
     def parse_boolean_literal(self) -> ast.BooleanLiteral:
-        return ast.BooleanLiteral(TokenType.TRUE == self.current.ttype)
+        return ast.BooleanLiteral(TokenType.TRUE == self.current.type)
 
     def parse_string_literal(self) -> ast.StringLiteral:
         return ast.StringLiteral(self.current.lexeme[1:-1])  # remove the double quotes
@@ -288,10 +288,10 @@ class Parser:
 
     def parse_expression(self, precedence: Precedence) -> ast.Expression | None:
         if (
-            prefix_parse_fn := self.prefix_parse_fns.get(self.current.ttype, None)
+            prefix_parse_fn := self.prefix_parse_fns.get(self.current.type, None)
         ) is None:
             self.parser_errors.append(
-                f"Invalid prefix token type: {self.current.ttype}"
+                f"Invalid prefix token type: {self.current.type}"
             )
 
             return None
@@ -299,11 +299,11 @@ class Parser:
         expression = prefix_parse_fn()
 
         while (
-            self.next.ttype != TokenType.SEMICOLON
+            self.next.type != TokenType.SEMICOLON
             and precedence.value < self.peek_precedence().value
         ):
             if (
-                infix_parse_fn := self.infix_parse_fns.get(self.next.ttype, None)
+                infix_parse_fn := self.infix_parse_fns.get(self.next.type, None)
             ) is None or expression is None:  # TODO: check this condition
                 return expression
 
@@ -339,7 +339,7 @@ class Parser:
         consequence = self.parse_block_statement()
         alternative: ast.BlockStatement | None = None
 
-        if self.next.ttype == TokenType.ELSE:
+        if self.next.type == TokenType.ELSE:
             self.advance()
 
             if not self.expect(TokenType.LBRACE):
@@ -356,8 +356,8 @@ class Parser:
         statements: list[ast.Statement] = []
 
         while (
-            self.current.ttype != TokenType.RBRACE
-            and self.current.ttype != TokenType.EOF
+            self.current.type != TokenType.RBRACE
+            and self.current.type != TokenType.EOF
         ):
             statment = self.parse_statement()
 
@@ -384,7 +384,7 @@ class Parser:
     def parse_function_parameters(self) -> list[ast.Identifier] | None:
         identifiers: list[ast.Identifier] = []
 
-        if self.next.ttype == TokenType.RPAREN:
+        if self.next.type == TokenType.RPAREN:
             self.advance()
             return identifiers
 
@@ -393,7 +393,7 @@ class Parser:
         identifier = ast.Identifier(self.current.lexeme)
         identifiers.append(identifier)
 
-        while self.next.ttype == TokenType.COMMA:
+        while self.next.type == TokenType.COMMA:
             self.advance()
             self.advance()
 
@@ -424,7 +424,7 @@ class Parser:
     ) -> list[Expression] | None:
         arguments: typing.List[Expression] = []
 
-        if self.next.ttype == end_delimiter:
+        if self.next.type == end_delimiter:
             self.advance()
             return arguments
 
@@ -435,7 +435,7 @@ class Parser:
 
         arguments.append(expression)
 
-        while self.next.ttype == TokenType.COMMA:
+        while self.next.type == TokenType.COMMA:
             self.advance()
             self.advance()
 
@@ -465,7 +465,7 @@ class Parser:
     def parse_dictionary_literal(self) -> ast.DictionaryLiteral | None:
         pairs: dict[Expression, Expression] = {}
 
-        while self.next.ttype != TokenType.RBRACE:
+        while self.next.type != TokenType.RBRACE:
             self.advance()
             key = self.parse_expression(Precedence.LOWEST)
 
@@ -483,7 +483,7 @@ class Parser:
 
             pairs[key] = value
 
-            if self.next.ttype == TokenType.COMMA:
+            if self.next.type == TokenType.COMMA:
                 self.advance()
 
         if not self.expect(TokenType.RBRACE):

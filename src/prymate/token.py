@@ -57,7 +57,7 @@ class TokenType(enum.Enum):
 class Token:
     """Represents a lexical token with its type, and literal (if any)."""
 
-    ttype: TokenType
+    type: TokenType
     lexeme: str
 
 
