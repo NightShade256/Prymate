@@ -12,7 +12,7 @@ requires-python = ">=3.13"
 dependencies = []
 
 [project.scripts]
-prymate = "prymate.console:main"
+prymate = "prymate:main"
 
 [dependency-groups]
 dev = [

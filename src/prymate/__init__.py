@@ -1,22 +1,10 @@
-from .ast import *
-from .evaluator import *
-from .objects import *
-from .parser import *
-from .repl import *
-from .scanner import *
-from .token import *
+from .console import start
 
-__all__ = (
-    ast.__all__
-    + evaluator.__all__
-    + scanner.__all__
-    + objects.__all__
-    + parser.__all__
-    + repl.__all__
-    + token.__all__
-)
-
-
-__version__ = "0.4.1"
+__version__ = "0.5.0"
 __author__ = "Anish Jewalikar"
 __license__ = "MIT"
+__all__ = ["main"]
+
+
+def main():
+    start(__version__)
