@@ -79,7 +79,7 @@ def help_function(args: list[Object]) -> String | Error:
 def puts_function(args: list[Object]) -> Null:
     """Print the given arguments to stdout."""
 
-    print("\n".join(str(args)))
+    print("\n".join(map(str, args)))
     return Null()
 
 
