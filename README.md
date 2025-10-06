@@ -1,77 +1,58 @@
 # Prymate
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/8156a028f2cc4b92912c83b9021cf5e5)](https://www.codacy.com/manual/anishjewalikar/prymate?utm_source=github.com&utm_medium=referral&utm_content=NightShade256/prymate&utm_campaign=Badge_Grade)
-![Tests](https://github.com/NightShade256/prymate/workflows/Tests/badge.svg?branch=master)
-
-A simple interpreter for the 🐒 Monkey Language (described in the book `Writing an Interpreter in Go by Thorsten Ball`) written in 🐍 Python.
-
-## Installation
-
-You can install the interpreter through `pip` by:  
-`pip install -U prymate`
-
-You can also get the latest version through this git repo, and building the package yourself through poetry.
-Tests are included in the [tests](https://github.com/NightShade256/prymate/tree/master/tests) subfolder in this repository.  
-You can run the said tests by cloning the repo, and executing the `run_tests.bat` file on Windows, and `run_tests.sh` on Linux/Mac OS.
+A simple interpreter for the [Monkey](https://monkeylang.org/) programming language written in Python.
 
 ## Usage
 
-You can start the Monkey Language REPL through the command `prymate` with no arguments.
+> [!NOTE]
+> You need to have `uv` installed as a prerequisite.
+
+To enter the REPL environment, invoke Prymate without any arguments:
 
 ```bash
-$ prymate
+$ uv run prymate
 
-Prymate 0.4.1 [Running on Windows]
-Type exit() to exit from the REPL.
+Prymate 0.5.0 [running on Linux]
+Type exit() to leave the REPL.
 
->>> puts("Hello, World!")
-Hello, World!
+>>> puts("Hello, world!")
+Hello, world!
 null
 ```
 
-Or, you can run a file by specifying the file path through the `-f` or `--file` argument.
+Or, you can alternatively execute a file by specifying the file path through `-f` or `--file` argument:
 
 ```bash
-$ prymate -f <path to file>
+$ uv run prymate -f [path to file]
+
+...
+```
+
+Tests can also be run using `uv`:
+
+```bash
+$ uv run pytest
 
 ...
 ```
 
 ## Features
 
-Prymate interprets the canon monkey language without any hitch and adds on top of it.
-All the features in the canon monkey language can be used with prymate.
+Prymate implements all vanilla Monkey constructs, and also implements following additional features:
 
-Additions:
-
-1. Additional Inbuilt Functions like `help, exit, type, gets, sumarr, zip, int, str, and more.`
-
-2. String `!=` and `==` operations are supported.
-
-3. Modulo `%` for determining the remainder of the expression `a / b`.
-
-4. Floating point literals (type `FLOAT` in the interpreter).
-
-5. Variable mutability (Reassign an already declared variable, a value).
-
-6. While Loops.
-
+1. Additional Inbuilt Functions like `help`, `exit`, `type`, `gets`, `sumarr`, `zip`, `int`, `str` and more
+2. String `!=` and `==` operations
+3. Modulo `%` for determining the remainder of a expression `a / b`
+4. Floating point literals (type `FLOAT` in the interpreter)
+5. Variable mutability
+6. While Loops
 7. Constants
 
-I plan to add support for more things in the future.
-Examples for the above additions coming soon.
+## Resources
 
-## Changelog
-
-v0.4.1
-
-1. **_Massively_** improve typing. `mypy` is relatively quiet now.
-
-## Acknowledgements
-
-This interpreter wouldn't be possible without the excellent `Writing an Interpreter in Go` by `Thorsten Ball`.  
-I highly recommend you to read it, and build your own monkey interpreter!
+This interpreter wouldn't have been possible without the excellent `Writing an Interpreter in Go` by `Thorsten Ball`.
+I highly recommend you to read it, and build your own Monkey interpreter!
 
 ## License
 
-The source code is licensed under the MIT license.
+Prymate is licensed under the terms of the MIT license.

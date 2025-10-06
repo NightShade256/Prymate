@@ -1,8 +1,8 @@
-# Example Programs written in Monkey
+# Examples
 
-These are some examples written in monkey, which you can run with prymate.
+These are some example programs written in Monkey, for use with Prymate.
 
 ## Programs
 
-1. `recursive_fib.mon`, fibonacci using recursion. (very slow)
-2. `faster_fib.mon`, fibonacci using while loop. (insanely fast)
+1. `recursive_fib.mon`, fibonacci using recursion.
+2. `iterative_fib.mon`, fibonacci using while loop. (non-standard Monkey)
