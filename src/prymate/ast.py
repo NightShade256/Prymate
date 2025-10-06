@@ -77,7 +77,7 @@ class ArrayLiteral(Expression):
 
 @dataclass
 class DictionaryLiteral(Expression):
-    pairs: dict[Expression, Expression]
+    entries: dict[Expression, Expression]
 
 
 @dataclass

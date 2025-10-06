@@ -1,4 +1,4 @@
-from prymate.token import get_identifier_type, Token, TokenType
+from prymate.token import Token, TokenType, get_identifier_type
 
 __all__ = ["Scanner"]
 

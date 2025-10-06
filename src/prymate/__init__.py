@@ -1,9 +1,9 @@
 from .ast import *
 from .evaluator import *
-from .scanner import *
 from .objects import *
 from .parser import *
 from .repl import *
+from .scanner import *
 from .token import *
 
 __all__ = (

@@ -290,9 +290,7 @@ class Parser:
         if (
             prefix_parse_fn := self.prefix_parse_fns.get(self.current.type, None)
         ) is None:
-            self.parser_errors.append(
-                f"Invalid prefix token type: {self.current.type}"
-            )
+            self.parser_errors.append(f"Invalid prefix token type: {self.current.type}")
 
             return None
 
@@ -356,8 +354,7 @@ class Parser:
         statements: list[ast.Statement] = []
 
         while (
-            self.current.type != TokenType.RBRACE
-            and self.current.type != TokenType.EOF
+            self.current.type != TokenType.RBRACE and self.current.type != TokenType.EOF
         ):
             statment = self.parse_statement()
 

@@ -1,8 +1,8 @@
 import pytest
 
 from prymate import ast
-from prymate.scanner import Scanner
 from prymate.parser import Parser
+from prymate.scanner import Scanner
 
 
 def check_parser_errors(parser: Parser):
@@ -344,7 +344,7 @@ def test_empty_dicitionary_literal():
     assert len(tree.statements) == 1
     assert isinstance(statement, ast.ExpressionStatement)
     assert isinstance(statement.expression, ast.DictionaryLiteral)
-    assert statement.expression.pairs == {}
+    assert statement.expression.entries == {}
 
 
 def test_dictionary_literal():
@@ -364,7 +364,7 @@ def test_dictionary_literal():
     assert len(tree.statements) == 1
     assert isinstance(statement, ast.ExpressionStatement)
     assert isinstance(statement.expression, ast.DictionaryLiteral)
-    assert statement.expression.pairs == expected_output
+    assert statement.expression.entries == expected_output
 
 
 def test_dictionary_literal_with_expression():
@@ -390,4 +390,4 @@ def test_dictionary_literal_with_expression():
     assert len(tree.statements) == 1
     assert isinstance(statement, ast.ExpressionStatement)
     assert isinstance(statement.expression, ast.DictionaryLiteral)
-    assert statement.expression.pairs == expected_output
+    assert statement.expression.entries == expected_output

@@ -2,15 +2,14 @@ import platform
 
 import prymate
 from prymate.evaluator import evaluate
-from prymate.scanner import Scanner
 from prymate.objects import Environment
 from prymate.parser import Parser
+from prymate.scanner import Scanner
 
 __all__ = ["start"]
 
 
 def start() -> None:
-
     # Print some information.
     sys_env = platform.system()
     print(f"\nPrymate {prymate.__version__} [Running on {sys_env}]")
@@ -34,4 +33,4 @@ def start() -> None:
 
         evaluated = evaluate(program, env)
         if evaluated is not None:
-            print(evaluated.inspect())
+            print(evaluated.to_string())
