@@ -279,9 +279,6 @@ def eval_infix_expression(env: Environment, node: ast.InfixExpression) -> Object
     if isinstance(left, (Integer, Float)) and isinstance(right, (Integer, Float)):
         return eval_numeric_infix_expression(left, node.operator, right)
 
-    if type(left) is not type(right):
-        return Error(f"type mismatch: {left.type()} {node.operator} {right.type()}")
-
     return Error(f"cannot perform operation: {str(left)} {node.operator} {str(right)}")
 
 
