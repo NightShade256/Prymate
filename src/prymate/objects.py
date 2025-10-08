@@ -1,6 +1,6 @@
 import abc
 import dataclasses
-import math
+import functools
 import typing
 
 from prymate import ast
@@ -21,6 +21,7 @@ __all__ = [
     "ReturnValue",
     "Error",
     "Environment",
+    "Eq",
 ]
 
 
@@ -45,11 +46,16 @@ class Object(abc.ABC):
         return True
 
 
+@functools.total_ordering
 class Eq(abc.ABC):
     """Trait for comparisions."""
 
     @abc.abstractmethod
     def __eq__(self, rhs: object) -> bool:
+        pass
+
+    @abc.abstractmethod
+    def __lt__(self, rhs: object) -> bool:
         pass
 
 
@@ -139,6 +145,9 @@ class Null(Object, Eq):
     def __eq__(self, rhs: object) -> bool:
         return self is rhs
 
+    def __lt__(self, rhs: object) -> bool:
+        return False
+
 
 class Integer(HashableObject, Eq):
     def __init__(self, value: int) -> None:
@@ -154,11 +163,14 @@ class Integer(HashableObject, Eq):
         return hash(self.value)
 
     def __eq__(self, rhs: object) -> bool:
-        if isinstance(rhs, Integer):
+        if isinstance(rhs, (Integer, Float)):
             return self.value == rhs.value
 
-        if isinstance(rhs, Float):
-            return math.isclose(float(self.value), rhs.value)
+        return False
+
+    def __lt__(self, rhs: object) -> bool:
+        if isinstance(rhs, (Integer, Float)):
+            return self.value < rhs.value
 
         return False
 
@@ -194,6 +206,9 @@ class Boolean(HashableObject, Eq):
     def __eq__(self, rhs: object) -> bool:
         return self is rhs
 
+    def __lt__(self, rhs: object) -> bool:
+        return self is not rhs and rhs is Boolean.__instances[True]
+
 
 class Float(Object, Eq):
     def __init__(self, value: float) -> None:
@@ -206,11 +221,14 @@ class Float(Object, Eq):
         return str(self.value)
 
     def __eq__(self, rhs: object) -> bool:
-        if isinstance(rhs, Float):
-            return math.isclose(self.value, rhs.value)
+        if isinstance(rhs, (Integer, Float)):
+            return self.value == rhs.value
 
-        if isinstance(rhs, Integer):
-            return math.isclose(self.value, float(rhs.value))
+        return False
+
+    def __lt__(self, rhs: object) -> bool:
+        if isinstance(rhs, (Integer, Float)):
+            return self.value < rhs.value
 
         return False
 
@@ -230,6 +248,9 @@ class String(HashableObject, Eq):
 
     def __eq__(self, rhs: object) -> bool:
         return isinstance(rhs, String) and self.value == rhs.value
+
+    def __lt__(self, rhs: object) -> bool:
+        return isinstance(rhs, String) and self.value < rhs.value
 
 
 class Array(Object):

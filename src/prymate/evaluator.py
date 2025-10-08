@@ -6,6 +6,7 @@ from prymate.objects import (
     Builtin,
     Dictionary,
     Environment,
+    Eq,
     Error,
     Float,
     Function,
@@ -15,7 +16,6 @@ from prymate.objects import (
     Object,
     ReturnValue,
     String,
-    Eq,
 )
 
 __all__ = [
@@ -231,10 +231,6 @@ def eval_numeric_infix_expression(
             return create_numeric_object(left.value / right.value)
         case "%":
             return create_numeric_object(left.value % right.value)
-        case "<":
-            return Boolean(left.value < right.value)
-        case ">":
-            return Boolean(left.value > right.value)
         case _:
             return Error(
                 f"cannot apply infix operator {operator} on two numeric values"
@@ -259,6 +255,7 @@ def eval_infix_expression(env: Environment, node: ast.InfixExpression) -> Object
     if right is None or isinstance(right, Error):
         return right
 
+    # not optimal, I know
     if node.operator == "==":
         return (
             Boolean(left is right)
@@ -271,6 +268,24 @@ def eval_infix_expression(env: Environment, node: ast.InfixExpression) -> Object
             Boolean(left is not right)
             if not (isinstance(left, Eq) and isinstance(right, Eq))
             else Boolean(left != right)
+        )
+
+    if node.operator == "<":
+        return (
+            Boolean(left < right)
+            if isinstance(left, Eq) and isinstance(right, Eq)
+            else Error(
+                f"cannot perform operation: {str(left)} {node.operator} {str(right)}"
+            )
+        )
+
+    if node.operator == ">":
+        return (
+            Boolean(left > right)
+            if isinstance(left, Eq) and isinstance(right, Eq)
+            else Error(
+                f"cannot perform operation: {str(left)} {node.operator} {str(right)}"
+            )
         )
 
     if isinstance(left, String) and isinstance(right, String):
