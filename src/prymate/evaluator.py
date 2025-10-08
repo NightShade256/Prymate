@@ -193,7 +193,7 @@ def eval_prefix_expression(
         return operand
 
     if node.operator == "!":
-        return Boolean(not operand.truth_value())
+        return Boolean(not operand.is_truthy())
 
     if node.operator == "-":
         if isinstance(operand, Integer):
@@ -311,7 +311,7 @@ def eval_if_expression(env: Environment, node: ast.IfExpression) -> Object | Non
     if condition is None or isinstance(condition, Error):
         return condition
 
-    if condition.truth_value():
+    if condition.is_truthy():
         return evaluate(env, node.consequence)
 
     if node.alternative is not None:
@@ -433,7 +433,7 @@ def eval_while_statement(
         if condition is None or isinstance(condition, Error):
             return condition
 
-        if condition.truth_value():
+        if condition.is_truthy():
             consequence = evaluate(env, statement.consequence)
 
             if isinstance(consequence, Error):

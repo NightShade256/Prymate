@@ -38,7 +38,7 @@ class Object(abc.ABC):
 
         pass
 
-    def truth_value(self) -> bool:
+    def is_truthy(self) -> bool:
         """Get the truth value of the object (is truthy or not)."""
 
         return True
@@ -124,7 +124,7 @@ class Null(Object):
         return "null"
 
     @typing.override
-    def truth_value(self) -> bool:
+    def is_truthy(self) -> bool:
         return False
 
 
@@ -167,7 +167,7 @@ class Boolean(HashableObject):
         return hash(self.value)
 
     @typing.override
-    def truth_value(self) -> bool:
+    def is_truthy(self) -> bool:
         return self.value
 
 
