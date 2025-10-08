@@ -15,6 +15,7 @@ from prymate.objects import (
     Object,
     ReturnValue,
     String,
+    Eq,
 )
 
 __all__ = [
@@ -234,29 +235,9 @@ def eval_numeric_infix_expression(
             return Boolean(left.value < right.value)
         case ">":
             return Boolean(left.value > right.value)
-        case "==":
-            return Boolean(left.value == right.value)
-        case "!=":
-            return Boolean(left.value != right.value)
         case _:
             return Error(
                 f"cannot apply infix operator {operator} on two numeric values"
-            )
-
-
-def eval_boolean_infix_expression(
-    left: Boolean, operator: str, right: Boolean
-) -> Object:
-    match operator:
-        case "==":
-            return Boolean(left is right)
-
-        case "!=":
-            return Boolean(left is not right)
-
-        case _:
-            return Error(
-                f"cannot apply infix operator {operator} on two boolean values"
             )
 
 
@@ -264,12 +245,6 @@ def eval_string_infix_expression(left: String, operator: str, right: String) -> 
     match operator:
         case "+":
             return String(left.value + right.value)
-
-        case "==":
-            return Boolean(left.value == right.value)
-
-        case "!=":
-            return Boolean(left.value != right.value)
 
         case _:
             return Error(f"cannot apply infix operator {operator} on two string values")
@@ -284,8 +259,19 @@ def eval_infix_expression(env: Environment, node: ast.InfixExpression) -> Object
     if right is None or isinstance(right, Error):
         return right
 
-    if isinstance(left, Boolean) and isinstance(right, Boolean):
-        return eval_boolean_infix_expression(left, node.operator, right)
+    if node.operator == "==":
+        return (
+            Boolean(left is right)
+            if not (isinstance(left, Eq) and isinstance(right, Eq))
+            else Boolean(left == right)
+        )
+
+    if node.operator == "!=":
+        return (
+            Boolean(left is not right)
+            if not (isinstance(left, Eq) and isinstance(right, Eq))
+            else Boolean(left != right)
+        )
 
     if isinstance(left, String) and isinstance(right, String):
         return eval_string_infix_expression(left, node.operator, right)
@@ -295,12 +281,6 @@ def eval_infix_expression(env: Environment, node: ast.InfixExpression) -> Object
 
     if type(left) is not type(right):
         return Error(f"type mismatch: {left.type()} {node.operator} {right.type()}")
-
-    if node.operator == "==":
-        return Boolean(left is right)
-
-    if node.operator == "!=":
-        return Boolean(left is not right)
 
     return Error(f"cannot perform operation: {str(left)} {node.operator} {str(right)}")
 

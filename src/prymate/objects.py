@@ -1,5 +1,6 @@
 import abc
 import dataclasses
+import math
 import typing
 
 from prymate import ast
@@ -42,6 +43,14 @@ class Object(abc.ABC):
         """Get the truth value of the object (is truthy or not)."""
 
         return True
+
+
+class Eq(abc.ABC):
+    """Trait for comparisions."""
+
+    @abc.abstractmethod
+    def __eq__(self, rhs: object) -> bool:
+        pass
 
 
 class Hashable(abc.ABC):
@@ -107,7 +116,7 @@ class Environment:
         self.store[name].object = value
 
 
-class Null(Object):
+class Null(Object, Eq):
     __instance: "Null | None" = None
 
     def __new__(cls) -> "Null":
@@ -127,8 +136,11 @@ class Null(Object):
     def is_truthy(self) -> bool:
         return False
 
+    def __eq__(self, rhs: object) -> bool:
+        return self is rhs
 
-class Integer(HashableObject):
+
+class Integer(HashableObject, Eq):
     def __init__(self, value: int) -> None:
         self.value = value
 
@@ -141,8 +153,17 @@ class Integer(HashableObject):
     def __hash__(self) -> int:
         return hash(self.value)
 
+    def __eq__(self, rhs: object) -> bool:
+        if isinstance(rhs, Integer):
+            return self.value == rhs.value
 
-class Boolean(HashableObject):
+        if isinstance(rhs, Float):
+            return math.isclose(float(self.value), rhs.value)
+
+        return False
+
+
+class Boolean(HashableObject, Eq):
     __instances: dict[bool, "Boolean"] = {}
     value: bool
 
@@ -170,8 +191,11 @@ class Boolean(HashableObject):
     def is_truthy(self) -> bool:
         return self.value
 
+    def __eq__(self, rhs: object) -> bool:
+        return self is rhs
 
-class Float(Object):
+
+class Float(Object, Eq):
     def __init__(self, value: float) -> None:
         self.value = value
 
@@ -181,8 +205,17 @@ class Float(Object):
     def __str__(self) -> str:
         return str(self.value)
 
+    def __eq__(self, rhs: object) -> bool:
+        if isinstance(rhs, Float):
+            return math.isclose(self.value, rhs.value)
 
-class String(HashableObject):
+        if isinstance(rhs, Integer):
+            return math.isclose(self.value, float(rhs.value))
+
+        return False
+
+
+class String(HashableObject, Eq):
     def __init__(self, value: str) -> None:
         self.value = value
 
@@ -194,6 +227,9 @@ class String(HashableObject):
 
     def __hash__(self) -> int:
         return hash(self.value)
+
+    def __eq__(self, rhs: object) -> bool:
+        return isinstance(rhs, String) and self.value == rhs.value
 
 
 class Array(Object):
