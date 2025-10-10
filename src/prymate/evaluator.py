@@ -382,7 +382,7 @@ def eval_index_expression(env: Environment, node: ast.IndexExpression) -> Object
     if isinstance(expression, Dictionary) and isinstance(index, HashableObject):
         return eval_dictionary_index_expression(expression, index)
 
-    return Error(f"index operator not supported: {str(expression)}")
+    return Error(f"index {index.type()} not supported on {expression.type()}")
 
 
 def eval_assignment_statement(
