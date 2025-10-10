@@ -348,15 +348,15 @@ def test_empty_dicitionary_literal():
     assert len(tree.statements) == 1
     assert isinstance(statement, ast.ExpressionStatement)
     assert isinstance(statement.expression, ast.DictionaryLiteral)
-    assert statement.expression.entries == {}
+    assert statement.expression.entries == []
 
 
 def test_dictionary_literal():
-    expected_output = {
-        ast.StringLiteral("one"): ast.IntegerLiteral(1),
-        ast.StringLiteral("two"): ast.IntegerLiteral(2),
-        ast.StringLiteral("three"): ast.IntegerLiteral(3),
-    }
+    expected_output = [
+        (ast.StringLiteral("one"), ast.IntegerLiteral(1)),
+        (ast.StringLiteral("two"), ast.IntegerLiteral(2)),
+        (ast.StringLiteral("three"), ast.IntegerLiteral(3)),
+    ]
 
     scanner = Scanner('{"one": 1, "two": 2, "three": 3}')
     parser = Parser(scanner)
@@ -372,17 +372,20 @@ def test_dictionary_literal():
 
 
 def test_dictionary_literal_with_expression():
-    expected_output = {
-        ast.StringLiteral("one"): ast.InfixExpression(
-            ast.IntegerLiteral(0), "+", ast.IntegerLiteral(1)
+    expected_output = [
+        (
+            ast.StringLiteral("one"),
+            ast.InfixExpression(ast.IntegerLiteral(0), "+", ast.IntegerLiteral(1)),
         ),
-        ast.StringLiteral("two"): ast.InfixExpression(
-            ast.IntegerLiteral(10), "-", ast.IntegerLiteral(8)
+        (
+            ast.StringLiteral("two"),
+            ast.InfixExpression(ast.IntegerLiteral(10), "-", ast.IntegerLiteral(8)),
         ),
-        ast.StringLiteral("three"): ast.InfixExpression(
-            ast.IntegerLiteral(15), "/", ast.IntegerLiteral(5)
+        (
+            ast.StringLiteral("three"),
+            ast.InfixExpression(ast.IntegerLiteral(15), "/", ast.IntegerLiteral(5)),
         ),
-    }
+    ]
 
     scanner = Scanner('{"one": 0 + 1, "two": 10 - 8, "three": 15 / 5}')
     parser = Parser(scanner)

@@ -54,9 +54,6 @@ class Identifier(Expression):
 class IntegerLiteral(Expression):
     value: int
 
-    def __hash__(self) -> int:
-        return hash(self.value)
-
 
 @dataclass
 class FloatLiteral(Expression):
@@ -66,9 +63,6 @@ class FloatLiteral(Expression):
 @dataclass
 class BooleanLiteral(Expression):
     value: bool
-
-    def __hash__(self) -> int:
-        return hash(self.value)
 
 
 @dataclass(frozen=True)
@@ -83,7 +77,7 @@ class ArrayLiteral(Expression):
 
 @dataclass
 class DictionaryLiteral(Expression):
-    entries: dict[Expression, Expression]
+    entries: list[tuple[Expression, Expression]]
 
 
 @dataclass

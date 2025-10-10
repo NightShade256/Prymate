@@ -460,7 +460,7 @@ class Parser:
         return ast.IndexExpression(expression, index)
 
     def parse_dictionary_literal(self) -> ast.DictionaryLiteral | None:
-        pairs: dict[Expression, Expression] = {}
+        pairs: list[tuple[Expression, Expression]] = []
 
         while self.next.type != TokenType.RBRACE:
             self.advance()
@@ -478,7 +478,7 @@ class Parser:
             if value is None:
                 return None
 
-            pairs[key] = value
+            pairs.append((key, value))
 
             if self.next.type == TokenType.COMMA:
                 self.advance()

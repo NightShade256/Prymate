@@ -155,7 +155,7 @@ def eval_dictionary_literal(
 ) -> Object | None:
     entries: dict[HashableObject, Object] = {}
 
-    for key_node, value_node in node.entries.items():
+    for key_node, value_node in node.entries:
         key = evaluate(env, key_node)
         if key is None or isinstance(key, Error):
             return key
