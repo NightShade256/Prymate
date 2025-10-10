@@ -327,13 +327,13 @@ def eval_call_expression(env: Environment, node: ast.CallExpression) -> Object |
         case Function():
             new_env = Environment(function.env)
 
+            if len(function.parameters) != len(arguments):
+                return Error(
+                    f"wrong number of arguments. got={len(function.parameters)}, want={len(arguments)}"
+                )
+
             for i, parameter in enumerate(function.parameters):
-                try:
-                    new_env.set_binding(parameter.name, arguments[i], True)
-                except IndexError:
-                    return Error(
-                        f"{parameter.name} argument missing from function call"
-                    )
+                new_env.set_binding(parameter.name, arguments[i], True)
 
             evaluated = evaluate(new_env, function.body)
 
