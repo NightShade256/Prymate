@@ -195,6 +195,45 @@ def push_function(args: list[Object]) -> Object:
     return Array([*args[0].elements, args[1]])
 
 
+def zip_function(args: list[Object]) -> Object:
+    """Return an ARRAY formed by grouping elements from the input ARRAYs,
+    truncated to the shortest ARRAY length (like Python’s zip)."""
+
+    if len(args) < 2:
+        return Error(f"wrong number of arguments. got={len(args)}, want>=2")
+
+    elements: list[list[Object]] = []
+
+    for object in args:
+        if not isinstance(object, Array):
+            return Error(f"argument to `zip` not supported, got {object.type()}")
+
+        elements.append(object.elements)
+
+    return Array(list(map(lambda e: Array(list(e)), zip(*elements))))
+
+
+def sumarr_function(args: list[Object]) -> Object:
+    """Return the sum of all INTEGER and FLOAT elements in the ARRAY.
+    Return an error if the ARRAY contains elements of any other type."""
+
+    if len(args) != 1:
+        return Error(f"wrong number of arguments. got={len(args)}, want=1")
+
+    if not isinstance(args[0], Array):
+        return Error(f"argument to `sumarr` not supported, got {args[0].type()}")
+
+    array_sum: int | float = 0
+
+    for element in args[0].elements:
+        if not isinstance(element, Integer) and not isinstance(element, Float):
+            return Error("ARRAY contains a non numeric element")
+
+        array_sum += element.value
+
+    return Integer(array_sum) if isinstance(array_sum, int) else Float(array_sum)
+
+
 def abs_function(args: list[Object]) -> Object:
     """Gives the absolute value of an INTEGER or FLOAT."""
 
@@ -224,5 +263,7 @@ BUILTINS = {
     "last": Builtin(last_function),
     "rest": Builtin(rest_function),
     "push": Builtin(push_function),
+    "zip": Builtin(zip_function),
+    "sumarr": Builtin(sumarr_function),
     "abs": Builtin(abs_function),
 }
