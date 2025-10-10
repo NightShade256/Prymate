@@ -28,7 +28,7 @@ $ uv run prymate -f [path to file]
 ...
 ```
 
-Tests can also be run using `uv`:
+To run the test suite,
 
 ```bash
 $ uv run pytest
@@ -44,13 +44,14 @@ Prymate implements all vanilla Monkey constructs, and also implements following 
 2. String `!=` and `==` operations
 3. Modulo `%` for determining the remainder of a expression `a / b`
 4. Floating point literals (type `FLOAT` in the interpreter)
-5. Variable mutability
-6. While Loops
-7. Constants
+5. Variable mutability (identifiers declared using `let` are mutable)
+6. While loops
+7. Constants (`const` keyword replaces `let`s vanilla behaviour)
 
 ## Resources
 
-This interpreter wouldn't have been possible without the excellent `Writing an Interpreter in Go` by `Thorsten Ball`.
+This interpreter wouldn't have been possible without the excellent `Writing an Interpreter in Go` by
+`Thorsten Ball`.
 I highly recommend you to read it, and build your own Monkey interpreter!
 
 ## License
