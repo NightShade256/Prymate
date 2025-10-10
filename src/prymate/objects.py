@@ -261,7 +261,7 @@ class Array(Object):
         return "ARRAY"
 
     def __str__(self) -> str:
-        return str(self.elements)
+        return f"[{', '.join(map(str, self.elements))}]"
 
 
 class Dictionary(Object):
@@ -272,7 +272,7 @@ class Dictionary(Object):
         return "DICTIONARY"
 
     def __str__(self) -> str:
-        return str(self.entries)
+        return f"{{{', '.join(map(lambda i: f'{str(i[0])}: {str(i[1])}', self.entries.items()))}}}"
 
 
 class Function(Object):
