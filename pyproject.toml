@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "prymate"
-version = "0.5.0"
+version = "0.6.0"
 license = "MIT"
 description = "A Monkey programming language interpreter"
 readme = "README.md"
