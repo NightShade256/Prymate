@@ -7,11 +7,15 @@ from prymate.objects import Environment, Error
 from prymate.parser import Parser
 from prymate.scanner import Scanner
 
-__all__ = ["start"]
+__all__ = ["main_helper"]
 
 
-def start(version: str) -> None:
+def main_helper(version: str, source_file: str | None = None) -> None:
     "Entry point for the Prymate interpreter."
+
+    if source_file is not None:
+        execute_file(pathlib.Path(source_file))
+        return
 
     parser = argparse.ArgumentParser(
         prog="prymate",
