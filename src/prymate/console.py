@@ -93,8 +93,8 @@ def execute_file(path: pathlib.Path):
 def start_repl(version: str) -> None:
     """Start the interactive Prymate REPL."""
 
-    print(f"\nPrymate {version} [running on {platform.system()}]")
-    print("Type exit() to leave the REPL.\n")
+    print(f"Prymate {version} [running on {platform.system()}]")
+    print("Type exit() to leave the REPL and help() to discover inbuilt functions.")
 
     env = Environment()
 
