@@ -4,7 +4,7 @@ import { Terminal } from "@xterm/xterm";
 
 import "@xterm/xterm/css/xterm.css";
 
-const PYODIDE_WORKER_URL = new URL("./python.worker.js", import.meta.url);
+import PyodideWorker from "./python.worker.js?worker";
 
 class PyodideTerminal {
     constructor() {
@@ -110,7 +110,7 @@ class PyodideTerminal {
 }
 
 async function main() {
-    const pyodideWorker = new Worker(PYODIDE_WORKER_URL, { type: "module" });
+    const pyodideWorker = new PyodideWorker();
     const terminal = new PyodideTerminal();
 
     terminal.open(document.getElementById("terminal-container"));
